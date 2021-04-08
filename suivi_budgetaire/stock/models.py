@@ -22,11 +22,20 @@ class Produit(models.Model):
 class User(models.Model):
     name = models.CharField(max_length=200)
     password = models.CharField(max_length=200)
-    superieur = models.ForeignKey('self', on_delete=models.CASCADE)
+    superieur = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
+    role = models.CharField(max_length=200, default="normal")
+
+    def serialize(self):
+        return {
+            "id": self.pk,
+            "name": self.name,
+            "password": self.password,
+            "role": self.role
+        }
 
 class Approvs(models.Model):
-    user = models.OneToOneField(User, on_delete= models.CASCADE, primary_key=True)
-    instant = models.CharField(max_length=200)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    instant = models.DateTimeField(auto_now_add=True)
     validation = models.IntegerField()
     message = models.CharField(max_length=200)
 

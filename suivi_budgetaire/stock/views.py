@@ -60,7 +60,8 @@ def addapprovs(request):
         my_json = my_json.replace("[", "")
         my_json = my_json.replace("]", "")
         app = my_json.split(";")
-        approvs = Approvs.objects.create()
+        user=User.objects.get(id=request.headers['Authorization'].split(' ')[1])
+        approvs = Approvs.objects.create(validation=0, message='', user=user)
         approvs.save()
         for a in app:
             b = json.loads(a)
@@ -72,17 +73,66 @@ def addapprovs(request):
     return JsonResponse({'message': 'Enregistrement reussi' })
 
 
-def listapprovs(request):
-    approv = Approv.objects.all().order_by('id')
+def allapprovs(request):
+    approv = Approv.objects.all()
     approvs=[]
     for a in approv:
         app={
             "name" : a.produit.name,
             "quantite" : a.quantite,
-            "approvs" : a.approvs.id
+            "approvs" : a.approvs.id,
+            "user_name": a.approvs.user.name,
+            "instant": a.approvs.instant
             }
         approvs.append(app)
     return JsonResponse(approvs, content_type="application/json", safe=False)
+
+
+def listapprovs(request):
+    approv = Approv.objects.filter(approvs__user__id=request.headers['Authorization'].split(' ')[1])
+    approvs=[]
+    for a in approv:
+        app={
+            "name" : a.produit.name,
+            "quantite" : a.quantite,
+            "approvs" : a.approvs.id,
+            "user_name": a.approvs.user.name,
+            "instant": a.approvs.instant
+            }
+        approvs.append(app)
+    return JsonResponse(approvs, content_type="application/json", safe=False)
+
+def listinferiorapprovs(request):
+    approv = Approv.objects.filter(approvs__user__superieur__id=request.headers['Authorization'].split(' ')[1])
+    #approv = Approv.objects.filter(approvs__validation=1)
+    approvs=[]
+    for a in approv:
+        app={
+            "name" : a.produit.name,
+            "quantite" : a.quantite,
+            "approvs" : a.approvs.id,
+            "user_name": a.approvs.user.name,
+            "instant": a.approvs.instant
+            }
+        print(a.approvs.id)
+        print('#######')
+        approvs.append(app)
+    return JsonResponse(approvs, content_type="application/json", safe=False)
+
+
+def listrmgapprovs(request):
+    approv = Approv.objects.filter(approvs__validation=1)
+    approvs=[]
+    for a in approv:
+        app={
+            "name" : a.produit.name,
+            "quantite" : a.quantite,
+            "approvs" : a.approvs.id,
+            "user_name": a.approvs.user.name,
+            "instant": a.approvs.instant
+            }
+        approvs.append(app)
+    return JsonResponse(approvs, content_type="application/json", safe=False)        
 
 
 @csrf_exempt
@@ -108,45 +158,54 @@ def modifapprovs(request):
     return JsonResponse({'message': 'Enregistrement reussi' })
 
 
-
+@csrf_exempt
 def decisionapprovs(request):
     if request.method == 'POST':
         req = request.body
         my_json = req.decode('utf8').replace("'", '"')
         data=json.loads(my_json)
-        
-        Approvs.objects.filter(id=data["id"])
+        Approvs.objects.filter(id=data["id"]).update(validation=data["decision"])
 
     return JsonResponse({'message': 'Enregistrement reussi' })
 
-
+@csrf_exempt
 def signup(request):
 
     if request.method == 'POST':
         req = request.body
         my_json = req.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
-        user = User.objects.get(id=data["user"])
-        if(user):
-            User.objects.create(name=data["name"], password=data["password"], user=user)
-        elif:
-            User.objects.create(name=data["name"], password=data["password"])
+        if(data["superieur"]):
+            user = User.objects.get(id=data["superieur"])
+            User.objects.create(name=data["name"], password=data["password"], superieur=user, role=data["role"])
+        else:
+            User.objects.create(name=data["name"], password=data["password"], role=data["role"])
 
+        for a in User.objects.all():
+            print(a.superieur)
         
     return JsonResponse({'message': 'Inscription reussi' })
 
-
+@csrf_exempt
 def signin(request):
     if request.method == 'POST':
         req = request.body
         my_json = req.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
-        user = User.objects.get(name=data["name"], password=data["password"])
-        if(user):
-            print(user.name)
-            response = { 'userId ' : user.pk }
-        elif:
-            print(user)
-            response = { 'error ' : 'nom ou mot de passe incorrect' } 
+        try:
+            user = User.objects.get(name=data["name"], password=data["password"])
+        except User.DoesNotExist:
+            user=''
 
-    JsonResponse(response)   
+        if(user):
+            response = { 'userId' : user.pk, 'role': user.role }
+        else:
+            response = { 'error' : 'nom ou mot de passe incorrect' } 
+
+    return JsonResponse(response)   
+
+@csrf_exempt
+def listuser(request):
+    users=User.objects.all()
+
+    return JsonResponse([user.serialize() for user in User.objects.all()], safe=False) 

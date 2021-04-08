@@ -9,6 +9,7 @@
           <input class="input_search" placeholder="search" name="search" [(ngModel)]="e" (keyup)="search()" autocomplete="off">
       </div>
     </div>
+    <!--Personnal approvs-->
     <div class="row" id="tableau">
         <div class="col">
             <table class="table table-bordered">
@@ -23,17 +24,43 @@
                 <tbody>
                   <tr class="row_table" *ngFor="let approv of approvsFilter; let index=index;">
                     <td>{{ approv.approvs }}</td>
-                    <td>Porato</td>
-                    <td> 01/12/2021 </td>
+                    <td>{{ approv.user_name }}</td>
+                    <td> {{ approv.instant }} </td>
                     <td>
                       <i class="fa fa-info mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#infoproduitform" ></i>
-                      <i class="fa fa-trash mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#modifapprovform"></i>
+                      <i class="fa fa-pencil mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#modifapprovform"></i>
                     </td>
                   </tr>
                 </tbody>
             </table>
         </div>
     </div>
+    <!--Other approv-->
+    <div class="row" id="tableau">
+      <div class="col">
+          <table class="table table-bordered">
+              <thead>
+                <tr class="first_row_table">
+                  <th>N°</th>
+                  <th>Utilisateur</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="row_table" *ngFor="let approv of approvsInferiorFilter; let index=index;">
+                  <td>{{ approv.approvs }}</td>
+                  <td>{{ approv.user_name }}</td>
+                  <td> {{ approv.instant }} </td>
+                  <td>
+                    <i class="fa fa-info mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#infoproduitform" ></i>
+                    <i class="fa fa-pencil mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#modifapprovform"></i>
+                  </td>
+                </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
     
   <!--Start Create Produit Modal-->
   <div class="modal" id="infoproduitform" tabindex="-1" aria-labelledby="exampleModalLabel">

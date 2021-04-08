@@ -13,13 +13,16 @@ import { ReapprovComponent } from './reapprov/reapprov.component';
 import { StatsComponent } from './stats/stats.component';
 import { ProduitsService } from './services/produits.service';
 import { ConnexionComponent } from './connexion/connexion.component';
+import { TestComponent } from './test/test.component';
 
 const appRoutes: Routes = [
   {path: 'produits', component: ProduitsComponent},
   {path: 'approv', component: ApprovComponent},
   {path: 'reapprov', component: ReapprovComponent},
   {path: 'stats', component: StatsComponent},
-  {path: '', redirectTo: 'approv', pathMatch: 'full'}
+  {path: 'connexion', component: ConnexionComponent},
+  {path: 'test', component: TestComponent},
+  {path: '', redirectTo: 'connexion', pathMatch: 'full'}
 ]
 
 @NgModule({
@@ -29,7 +32,8 @@ const appRoutes: Routes = [
     ApprovComponent,
     ReapprovComponent,
     StatsComponent,
-    ConnexionComponent
+    ConnexionComponent,
+    TestComponent
   ],
   imports: [
     RouterModule,

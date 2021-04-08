@@ -14,9 +14,19 @@ export class ApprovComponent implements OnInit {
 
   @Input() d;
   @Input() approvs=[];
+  @Input() allApprovs=[];
+  @Input() rmgApprovs=[];
+  @Input() inferiorApprovs=[];
   @Input() id;
+
   @Input() approvsId=[];
   @Input() approvsFilter=[];
+  @Input() approvsRmgId=[];
+  @Input() approvsRmgFilter=[];
+  @Input() approvsInferiorId=[];
+  @Input() approvsInferiorFilter=[];
+
+
   @Input() approvsItems =[];
   @Input() new_produit;
   @Input() quantite;
@@ -29,41 +39,79 @@ export class ApprovComponent implements OnInit {
   approvsSubscription: Subscription;
   produitsSubscription: Subscription;
   listproduitsSubscription: Subscription;
+  inferiorApprovsSubscription: Subscription;
+  rmgApprovsSubscription: Subscription;
 
   constructor(private approvsService: ApprovsService, private produitsService: ProduitsService, private httpClient: HttpClient) { }
 
   ngOnInit(): void {
     this.produitsService.listProduits();
-    this.produits= this.produitsService.produits;
     this.approvsService.listApprovs();
-    this.approvsSubscription = this.approvsService.approvsSubject.subscribe(
+    this.approvsService.listRmgApprovs();
+    this.approvsService.listInferiorApprovs();
+
+    this.produitsSubscription = this.produitsService.produitsSubject.subscribe(
+      (data)=>{ this.produits = data; }
+    );
+    this.inferiorApprovsSubscription = this.approvsService.inferiorApprovsSubject.subscribe(
+      (data)=>{ 
+        this.inferiorApprovs = data;
+        for(let i=0; i<this.inferiorApprovs.length; i++){
+          if(!(this.approvsInferiorId.includes(this.inferiorApprovs[i].approvs))){
+            this.approvsInferiorId.push(this.inferiorApprovs[i].approvs);
+            this.approvsInferiorFilter.push(this.inferiorApprovs[i]);
+          }
+        } 
+      }
+    );
+    this.rmgApprovsSubscription = this.approvsService.rmgApprovsSubject.subscribe(
       (data)=>{
-        this.approvs = data;
-        for(let i=0; i<this.approvs.length; i++){
-          if(!(this.approvsId.includes(this.approvs[i].approvs))){
-            console.log(this.approvs[i].approvs+"@@@");
-            this.approvsId.push(this.approvs[i].approvs);
-            this.approvsFilter.push(this.approvs[i]);
-            console.log("tintin toi la");
+        this.rmgApprovs = data;
+        for(let i=0; i<this.rmgApprovs.length; i++){
+          if(!(this.approvsRmgId.includes(this.rmgApprovs[i].approvs))){
+            this.approvsRmgId.push(this.rmgApprovs[i].approvs);
+            this.approvsRmgFilter.push(this.rmgApprovs[i]);
           }
         }
+      }
+    );
+    
+    //this.inferiorApprovs = this.approvsService.inferiorApprovs;
+    this.approvsSubscription = this.approvsService.approvsSubject.subscribe(
+      (data)=>{
+        this.approvs = data;     
+        for(let i=0; i<this.approvs.length; i++){
+          if(!(this.approvsId.includes(this.approvs[i].approvs))){
+            this.approvsId.push(this.approvs[i].approvs);
+            this.approvsFilter.push(this.approvs[i]);
+          }       
+         
+        }
+
+      this.httpClient.get(this.url + "allapprovs")
+      .subscribe(
+        (data: any[])=>{
+          this.allApprovs = data;
+          console.log("reussite lors de la récuperation des approvs de tout le monde");
+        },
+        (error)=>{
+          console.log("probleme lors de la récuperation des approvs" + error);
+        }
+      );
       }
     );
     this.listproduitsSubscription = this.listproduitsSubject.subscribe(
       (data)=>{this.listproduits=data;}
     );
-    this.produitsSubscription = this.produitsService.produitsSubject.subscribe(
-      (data)=>{this.produits=data;}
-    );
-
-    
+ 
 
   }
 
   addApprov(form: NgForm){
-      this.approvsService.addApprov(this.listproduits);
+      this.approvsService.addApprov(this.listproduits,window.localStorage.getItem("user_id"));
     
   }
+
   search(){}
 
   updatelistprod(){
@@ -120,7 +168,7 @@ export class ApprovComponent implements OnInit {
 
   infoApprovs(id){
     this.id=id;
-    this.approvsItems = this.approvs.filter(approv=>approv.approvs==id);
+    this.approvsItems = this.allApprovs.filter(approv=>approv.approvs==id);
   }
 
   valider(){

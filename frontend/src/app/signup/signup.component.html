@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <form (ngSubmit)="signup(edit)" #edit="ngForm">
+                <div class="row">
+                    <div class="col">Nom</div>
+                    <div class="col"><input class="form-control" type="text" name="name" ngModel></div>
+                </div>
+                <div class="row">
+                    <div class="col">Mot De Passe</div>
+                    <div class="col"><input class="form-control" type="text" name="password" ngModel></div>
+                </div>
+                <div class="row">
+                    <div class="col">Superieur</div>
+                    <div class="col">
+                        <select name="superieur" class="form-select" ngModel>
+                            <option *ngFor="let user of users" value="{{ user.id }}">{{ user.name }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">Role</div>
+                    <div class="col">
+                        <select name="role" class="form-select" ngModel>
+                            <option value="normal">normal</option>
+                            <option value="rmg">RMG</option>
+                            <option value="cgai">CGAI</option>
+                            <option value="dg">DG</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row"><button type="submit" class="btn btn-primary">ok</button></div>
+            </form>
+        </div>
+    </div>
+</div>

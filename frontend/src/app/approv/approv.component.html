@@ -1,66 +1,120 @@
-<div class="card">
-    <div class="row">
-      <div class="col">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createapprovform"><i class="fa fa-user-plus"></i></button>
-        <button class="btn btn-success" data-toggle="modal" data-target="#"><i class="fa fa-upload"></i></button>
-        <button class="btn btn-success"><i class="fa fa-download"></i></button>
-      </div>
-      <div class="col">
-          <input class="input_search" placeholder="search" name="search" [(ngModel)]="e" (keyup)="search()" autocomplete="off">
-      </div>
-    </div>
-    <!--Personnal approvs-->
-    <div class="row" id="tableau">
-        <div class="col">
-            <table class="table table-bordered">
-                <thead>
-                  <tr class="first_row_table">
-                    <th>N°</th>
-                    <th>Utilisateur</th>
-                    <th>Date</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="row_table" *ngFor="let approv of approvsFilter; let index=index;">
-                    <td>{{ approv.approvs }}</td>
-                    <td>{{ approv.user_name }}</td>
-                    <td> {{ approv.instant }} </td>
-                    <td>
-                      <i class="fa fa-info mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#infoproduitform" ></i>
-                      <i class="fa fa-pencil mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#modifapprovform"></i>
-                    </td>
-                  </tr>
-                </tbody>
-            </table>
+<div class="row">
+  <div class="col">
+    <ul class="nav nav-tabs" id="mytab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#myApprov" role="tab" aria-controls="home" aria-selected="true">Mes approvs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#otherApprov" role="tab" aria-controls="profile" aria-selected="true">Autres approvs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#rmgApprov" role="tab" aria-controls="contact" aria-selected="true">Demandes</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="myApprov" role="tabpanel" aria-labelledby="home-tab">
+        <div class="row">
+          <div class="col">
+            <button class="btn btn-success" data-toggle="modal" data-target="#createapprovform"><i class="fa fa-user-plus"></i></button>
+            <button class="btn btn-success" data-toggle="modal" data-target="#"><i class="fa fa-upload"></i></button>
+            <button class="btn btn-success"><i class="fa fa-download"></i></button>
+          </div>
+          <div class="col">
+              <input class="input_search" placeholder="search" name="search" [(ngModel)]="e" (keyup)="search()" autocomplete="off">
+          </div>
         </div>
-    </div>
-    <!--Other approv-->
-    <div class="row" id="tableau">
-      <div class="col">
-          <table class="table table-bordered">
-              <thead>
-                <tr class="first_row_table">
-                  <th>N°</th>
-                  <th>Utilisateur</th>
-                  <th>Date</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="row_table" *ngFor="let approv of approvsInferiorFilter; let index=index;">
-                  <td>{{ approv.approvs }}</td>
-                  <td>{{ approv.user_name }}</td>
-                  <td> {{ approv.instant }} </td>
-                  <td>
-                    <i class="fa fa-info mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#infoproduitform" ></i>
-                    <i class="fa fa-pencil mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#modifapprovform"></i>
-                  </td>
-                </tr>
-              </tbody>
-          </table>
+        <!--Personnal approvs-->
+        <div class="row" id="tableau">
+          <div class="col">
+              <table class="table table-bordered">
+                  <thead>
+                    <tr class="first_row_table">
+                      <th>N°</th>
+                      <th>Utilisateur</th>
+                      <th>Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="row_table" *ngFor="let approv of approvsFilter; let index=index;">
+                      <td>{{ approv.approvs }}</td>
+                      <td>{{ approv.user_name }}</td>
+                      <td> {{ approv.instant }} </td>
+                      <td>
+                        <i class="fa fa-info mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#infoproduitform" ></i>
+                        <i class="fa fa-pencil mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#modifapprovform"></i>
+                      </td>
+                    </tr>
+                  </tbody>
+              </table>
+          </div>
+        </div>
+        <!--End of personnal approvs-->
       </div>
+      <div class="tab-pane fade" id="otherApprov" role="tabpanel" aria-labelledby="profile-tab">
+        <!--Other approvs-->
+        <div class="row" id="tableau" *ngIf="approvsOtherFilter">
+          <div class="col">
+              <table class="table table-bordered">
+                  <thead>
+                    <tr class="first_row_table">
+                      <th>N°</th>
+                      <th>Utilisateur</th>
+                      <th>Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="row_table" *ngFor="let approv of approvsOtherFilter; let index=index;">
+                      <td>{{ approv.approvs }}</td>
+                      <td>{{ approv.user_name }}</td>
+                      <td> {{ approv.instant }} </td>
+                      <td>
+                        <i class="fa fa-info mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#infoproduitform" ></i>
+                        <i class="fa fa-pencil mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#modifapprovform"></i>
+                      </td>
+                    </tr>
+                  </tbody>
+              </table>
+          </div>
+         </div>
+        <!--End of other approvs-->
+      </div>
+
+      <div class="tab-pane fade" id="rmgApprov" role="tabpanel" aria-labelledby="contact-tab">
+        <!--Approvs address to Rmg for livraison-->
+        <div class="row" id="tableau">
+          <div class="col">
+              <table class="table table-bordered">
+                  <thead>
+                    <tr class="first_row_table">
+                      <th>N°</th>
+                      <th>Utilisateur</th>
+                      <th>Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="row_table" *ngFor="let approv of approvsSuccessFilter; let index=index;">
+                      <td>{{ approv.approvs }}</td>
+                      <td>{{ approv.user_name }}</td>
+                      <td> {{ approv.instant }} </td>
+                      <td>
+                        <i class="fa fa-info mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#infoproduitform" ></i>
+                        <i class="fa fa-pencil mr-3" (click)="infoApprovs(approv.approvs)" data-toggle="modal" data-target="#modifapprovform"></i>
+                      </td>
+                    </tr>
+                  </tbody>
+              </table>
+          </div>
+        </div>
+        <!--End of approvs adress to Rmg-->
+      </div>
+    </div>
   </div>
+</div>
+
+
     
   <!--Start Create Produit Modal-->
   <div class="modal" id="infoproduitform" tabindex="-1" aria-labelledby="exampleModalLabel">

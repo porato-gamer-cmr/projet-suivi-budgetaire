@@ -9,7 +9,6 @@ export class ApprovsService {
 
   url="http://172.16.16.195:8000/stock/";
   p: Boolean;
-  response;
   headers = new HttpHeaders().set('Authorization', 'Bearer '+window.localStorage.getItem("user_id"));
 
   constructor(private httpClient: HttpClient) { }

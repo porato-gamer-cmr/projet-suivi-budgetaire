@@ -15,16 +15,16 @@ export class ApprovComponent implements OnInit {
   @Input() d;
   @Input() approvs=[];
   @Input() allApprovs=[];
-  @Input() rmgApprovs=[];
-  @Input() inferiorApprovs=[];
+  @Input() otherApprovs=[];
+  @Input() successApprovs=[];
   @Input() id;
 
   @Input() approvsId=[];
   @Input() approvsFilter=[];
-  @Input() approvsRmgId=[];
-  @Input() approvsRmgFilter=[];
-  @Input() approvsInferiorId=[];
-  @Input() approvsInferiorFilter=[];
+  @Input() approvsOtherId=[];
+  @Input() approvsOtherFilter=[];
+  @Input() approvsSuccessId=[];
+  @Input() approvsSuccessFilter=[];
 
 
   @Input() approvsItems =[];
@@ -39,8 +39,8 @@ export class ApprovComponent implements OnInit {
   approvsSubscription: Subscription;
   produitsSubscription: Subscription;
   listproduitsSubscription: Subscription;
-  inferiorApprovsSubscription: Subscription;
-  rmgApprovsSubscription: Subscription;
+  otherApprovsSubscription: Subscription;
+  successApprovsSubscription: Subscription;
 
   constructor(private approvsService: ApprovsService, private produitsService: ProduitsService, private httpClient: HttpClient) { }
 
@@ -53,30 +53,32 @@ export class ApprovComponent implements OnInit {
     this.produitsSubscription = this.produitsService.produitsSubject.subscribe(
       (data)=>{ this.produits = data; }
     );
-    this.inferiorApprovsSubscription = this.approvsService.inferiorApprovsSubject.subscribe(
+
+    this.otherApprovsSubscription = this.approvsService.inferiorApprovsSubject.subscribe(
       (data)=>{ 
-        this.inferiorApprovs = data;
-        for(let i=0; i<this.inferiorApprovs.length; i++){
-          if(!(this.approvsInferiorId.includes(this.inferiorApprovs[i].approvs))){
-            this.approvsInferiorId.push(this.inferiorApprovs[i].approvs);
-            this.approvsInferiorFilter.push(this.inferiorApprovs[i]);
+        this.otherApprovs = data;
+        for(let i=0; i<this.otherApprovs.length; i++){
+          if(!(this.approvsOtherId.includes(this.otherApprovs[i].approvs))){
+            this.approvsOtherId.push(this.otherApprovs[i].approvs);
+            this.approvsOtherFilter.push(this.otherApprovs[i]);
           }
         } 
       }
-    );
-    this.rmgApprovsSubscription = this.approvsService.rmgApprovsSubject.subscribe(
+    ); 
+
+    if(window.localStorage.getItem("role")=="rmg") {
+    this.successApprovsSubscription = this.approvsService.rmgApprovsSubject.subscribe(
       (data)=>{
-        this.rmgApprovs = data;
-        for(let i=0; i<this.rmgApprovs.length; i++){
-          if(!(this.approvsRmgId.includes(this.rmgApprovs[i].approvs))){
-            this.approvsRmgId.push(this.rmgApprovs[i].approvs);
-            this.approvsRmgFilter.push(this.rmgApprovs[i]);
+        this.successApprovs = data;
+        for(let i=0; i<this.successApprovs.length; i++){
+          if(!(this.approvsSuccessId.includes(this.successApprovs[i].approvs))){
+            this.approvsSuccessId.push(this.successApprovs[i].approvs);
+            this.approvsSuccessFilter.push(this.successApprovs[i]);
           }
         }
       }
-    );
+    ); }
     
-    //this.inferiorApprovs = this.approvsService.inferiorApprovs;
     this.approvsSubscription = this.approvsService.approvsSubject.subscribe(
       (data)=>{
         this.approvs = data;     

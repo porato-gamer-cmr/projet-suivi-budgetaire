@@ -12,17 +12,21 @@ import { ApprovComponent } from './approv/approv.component';
 import { ReapprovComponent } from './reapprov/reapprov.component';
 import { StatsComponent } from './stats/stats.component';
 import { ProduitsService } from './services/produits.service';
-import { ConnexionComponent } from './connexion/connexion.component';
 import { TestComponent } from './test/test.component';
+import { SigninComponent } from './signin/signin.component';
+import { SignupComponent } from './signup/signup.component';
+import { ContainerComponent } from './container/container.component';
+import { ApprovsService } from './services/approvs.service';
 
 const appRoutes: Routes = [
   {path: 'produits', component: ProduitsComponent},
   {path: 'approv', component: ApprovComponent},
   {path: 'reapprov', component: ReapprovComponent},
   {path: 'stats', component: StatsComponent},
-  {path: 'connexion', component: ConnexionComponent},
-  {path: 'test', component: TestComponent},
-  {path: '', redirectTo: 'connexion', pathMatch: 'full'}
+  {path: 'signup', component: SignupComponent},
+  {path: 'signin', component: SigninComponent},
+  {path: 'container', component: ContainerComponent},
+  {path: '', redirectTo: 'signin', pathMatch: 'full'}
 ]
 
 @NgModule({
@@ -32,8 +36,10 @@ const appRoutes: Routes = [
     ApprovComponent,
     ReapprovComponent,
     StatsComponent,
-    ConnexionComponent,
-    TestComponent
+    TestComponent,
+    SigninComponent,
+    SignupComponent,
+    ContainerComponent
   ],
   imports: [
     RouterModule,
@@ -43,7 +49,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     AppRoutingModule
   ],
-  providers: [ProduitsService],
+  providers: [ProduitsService, ApprovsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

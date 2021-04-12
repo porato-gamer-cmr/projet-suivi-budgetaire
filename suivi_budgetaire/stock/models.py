@@ -20,7 +20,7 @@ class Produit(models.Model):
         return self.name
 
 class User(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     password = models.CharField(max_length=200)
     superieur = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     role = models.CharField(max_length=200, default="normal")
